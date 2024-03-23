@@ -45,6 +45,12 @@ def main():
         response = fetch("/", method='POST')
         print(response)
 
+        capture_image()
+        for _ in range(3):
+            spot.move_by_velocity_control(0, 0, 0.5, 5)
+            time.sleep(5)
+            capture_image()
+
 
 if __name__ == '__main__':
     main()
