@@ -2,8 +2,8 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
-@app.post("/")
-async def handle_command(cmd: str):
+@app.get("/")
+async def handle_command():
     cmd = input()
     if cmd == "0":
         return {cmd}
