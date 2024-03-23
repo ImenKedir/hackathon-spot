@@ -42,19 +42,13 @@ def capture_image():
     rv, image = camera_capture.read()
     print(f"Image Dimensions: {image.shape}")
     camera_capture.release()
-    cv2.imwrite(f'/merklebot/job_data/camera_{time.time()}.jpg', image)
+    # cv2.imwrite(f'/merklebot/job_data/camera_{time.time()}.jpg', image)
+    supabase.storage.from_("spot").upload(file=image,path=f"img", file_options={"content-type": "image/jpeg"})
 
 
 def main():
     with SpotController(username=SPOT_USERNAME, password=SPOT_PASSWORD, robot_ip=ROBOT_IP) as spot:
-        response = fetch("/")
-        print(response)
-
         capture_image()
-        for _ in range(3):
-            spot.move_by_velocity_control(0, 0, 0.5, 5)
-            time.sleep(5)
-            capture_image()
 
 
 if __name__ == '__main__':
