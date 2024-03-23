@@ -2,12 +2,35 @@ import os
 import time
 from spot_controller import SpotController
 import cv2
-from req import fetch
+import http.client
 
 ROBOT_IP = "10.0.0.3"#os.environ['ROBOT_IP']
 SPOT_USERNAME = "admin"#os.environ['SPOT_USERNAME']
 SPOT_PASSWORD = "2zqa8dgw7lor"#os.environ['SPOT_PASSWORD']
 
+def fetch(path = "/", method='GET'):
+    # Url
+    url='http://192.168.2.189:8000'
+    
+    # Define the URL and headers
+    headers = {}
+
+    # Create an HTTP connection
+    conn = http.client.HTTPConnection(url.split("/")[2])
+
+    # Send a GET request
+    conn.request("GET", path, headers=headers)
+
+    # Get the response
+    response = conn.getresponse()
+
+    # Print the response status and data
+    print("Status:", response.status, response.reason)
+    data = response.read()
+    print("Data:", data.decode())
+
+    # Close the connection
+    conn.close()
 
 def capture_image():
     camera_capture = cv2.VideoCapture(0)
@@ -21,20 +44,6 @@ def main():
     with SpotController(username=SPOT_USERNAME, password=SPOT_PASSWORD, robot_ip=ROBOT_IP) as spot:
         response = fetch("/", method='POST')
         print(response)
-
-        capture_image()
-        spot.move_head_in_points(yaws=[0.2, 0],
-                                 pitches=[0.3, 0],
-                                 rolls=[0.4, 0],
-                                 sleep_after_point_reached=1)
-        capture_image()
-        spot.move_head_in_points(yaws=[0, 0.4],
-                                 pitches=[0, 0.5],
-                                 rolls=[0, 0.7],
-                                 sleep_after_point_reached=1)
-
-
-        
 
 
 if __name__ == '__main__':
