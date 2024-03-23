@@ -63,6 +63,8 @@ def main():
         res = capture_image()
         print(res)
 
+        say("hello world, hello world, hello world")
+
 
 
 if __name__ == '__main__':
