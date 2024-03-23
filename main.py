@@ -52,7 +52,7 @@ def capture_image():
 
 def say(prompt):
     engine = pyttsx3.init()
-    filename = f'/merklebot/job_data/audio/{time.time()}.wav'
+    filename = 'sound.wav'
     engine.save_to_file(text=prompt, filename=filename)
     engine.runAndWait()
     os.system(f"ffplay -nodisp -autoexit -loglevel quiet {filename}")
