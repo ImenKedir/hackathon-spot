@@ -52,18 +52,18 @@ def capture_image():
 
 def say(prompt):
     engine = pyttsx3.init()
-    filename = f'/merklebot/job_data/audio{time.time()}.wav'
-    engine.say(prompt)
+    filename = f'/merklebot/job_data/audio/{time.time()}.wav'
+    engine.save_to_file(text=prompt, filename=filename)
     engine.runAndWait()
+    os.system(f"ffplay -nodisp -autoexit -loglevel quiet {filename}")
 
 
 def main():
     with SpotController(username=SPOT_USERNAME, password=SPOT_PASSWORD, robot_ip=ROBOT_IP) as spot:
         res = capture_image()
-
         print(res)
 
-        say("Hello world")
+
 
 if __name__ == '__main__':
     main()
