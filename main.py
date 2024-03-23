@@ -4,6 +4,7 @@ from spot_controller import SpotController
 import cv2
 import http.client
 from supabase import create_client, Client
+import pyttsx3
 
 url: str = os.environ.get("SUPABASE_URL")
 key: str = os.environ.get("SUPABASE_KEY")
@@ -49,12 +50,20 @@ def capture_image():
     
     return res
 
+def say(prompt):
+    engine = pyttsx3.init()
+    filename = f'/merklebot/job_data/audio{time.time()}.wav'
+    engine.say(prompt)
+    engine.runAndWait()
+
 
 def main():
     with SpotController(username=SPOT_USERNAME, password=SPOT_PASSWORD, robot_ip=ROBOT_IP) as spot:
         res = capture_image()
+
         print(res)
 
+        say("Hello world")
 
 if __name__ == '__main__':
     main()
