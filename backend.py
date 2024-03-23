@@ -26,7 +26,6 @@ async def describe(img_id: str = None):
     if not img_id:
         return "INCLUDE IMG ID IN URL"
 
-
     res = supabase.storage.from_('spot').list()
 
     for r in res:
