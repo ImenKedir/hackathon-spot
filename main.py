@@ -40,10 +40,12 @@ def fetch(path = "/", method='GET'):
 def capture_image():
     camera_capture = cv2.VideoCapture(0)
     rv, image = camera_capture.read()
-    print(f"Image Dimensions: {image.shape}")
     camera_capture.release()
-    # cv2.imwrite(f'/merklebot/job_data/camera_{time.time()}.jpg', image)
-    supabase.storage.from_("spot").upload(file=image,path=f"img", file_options={"content-type": "image/jpeg"})
+    path = f'/merklebot/job_data/camera_{time.time()}.jpg'
+    cv2.imwrite(path, image)
+
+    with open(path, 'rb') as f:
+        supabase.storage.from_("testbucket").upload(file=f,path=path, file_options={"content-type": "image/jpeg"})
 
 
 def main():
