@@ -3,6 +3,11 @@ import time
 from spot_controller import SpotController
 import cv2
 import http.client
+from supabase import create_client, Client
+
+url: str = os.environ.get("SUPABASE_URL")
+key: str = os.environ.get("SUPABASE_KEY")
+supabase: Client = create_client(url, key)
 
 ROBOT_IP = "10.0.0.3"#os.environ['ROBOT_IP']
 SPOT_USERNAME = "admin"#os.environ['SPOT_USERNAME']
