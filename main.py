@@ -45,12 +45,15 @@ def capture_image():
     cv2.imwrite(path, image)
 
     with open(path, 'rb') as f:
-        supabase.storage.from_("testbucket").upload(file=f,path=path, file_options={"content-type": "image/jpeg"})
+        res = supabase.storage.from_("spot").upload(file=f,path=path, file_options={"content-type": "image/jpeg"})
+    
+    return res
 
 
 def main():
     with SpotController(username=SPOT_USERNAME, password=SPOT_PASSWORD, robot_ip=ROBOT_IP) as spot:
-        capture_image()
+        res = capture_image()
+        print(res)
 
 
 if __name__ == '__main__':
