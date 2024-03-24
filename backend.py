@@ -2,6 +2,7 @@ from fastapi import FastAPI
 import os
 import replicate
 from supabase import create_client, Client
+import pyttsx3
 
 os.environ["REPLICATE_API_TOKEN"] = "r8_NgBhq5ope0oWJtETPlK3YKlxPFvth1u3W96ue"
 
@@ -21,26 +22,26 @@ async def handle_command():
     else:
         return {"Invalid input. Please enter a valid cmd."}
 
-@app.get("/d/{img_id}")
-async def describe(img_id: str = None):
-    if not img_id:
-        return "INCLUDE IMG ID IN URL"
 
-    res = supabase.storage.from_('spot').list()
+@app.get("/d")
+async def describe():
+    res = supabase.storage.from_('spot').get_public_url('img.jpg')
 
-    for r in res:
-        print(r)
+    print(res)
 
-    return [res[0]]
-    # send to replicate endpoint
-    # input = {
-    # "image": res,
-    # "prompt": "I'm blind. Can you describe this image for me in great detail?"
-    # }
+    return res
 
-    # output = replicate.run(
-    #     "yorickvp/llava-13b:b5f6212d032508382d61ff00469ddda3e32fd8a0e75dc39d8a4191bb742157fb",
-    #     input=input
-    # )
+    # engine = pyttsx3.init()
+    # engine.say("I will speak this text")
+    # engine.runAndWait()
+    input = {
+    "image": res,
+    "prompt": "I'm blind. Can you describe this image for me in great detail?"
+    }
 
-    # print("".join(output))
+    output = replicate.run(
+        "yorickvp/llava-13b:b5f6212d032508382d61ff00469ddda3e32fd8a0e75dc39d8a4191bb742157fb",
+        input=input
+    )
+
+    return "".join(output)

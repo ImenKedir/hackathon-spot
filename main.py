@@ -4,7 +4,6 @@ from spot_controller import SpotController
 import cv2
 import http.client
 from supabase import create_client, Client
-import pyttsx3
 
 url: str = os.environ.get("SUPABASE_URL")
 key: str = os.environ.get("SUPABASE_KEY")
@@ -42,29 +41,19 @@ def capture_image():
     camera_capture = cv2.VideoCapture(0)
     rv, image = camera_capture.read()
     camera_capture.release()
-    path = f'/merklebot/job_data/camera_{time.time()}.jpg'
+    path = f'img.jpg'
     cv2.imwrite(path, image)
 
     with open(path, 'rb') as f:
         res = supabase.storage.from_("spot").upload(file=f,path=path, file_options={"content-type": "image/jpeg"})
     
-    return res
-
-def say(prompt):
-    engine = pyttsx3.init()
-    filename = 'sound.wav'
-    engine.save_to_file(text=prompt, filename=filename)
-    engine.runAndWait()
-    os.system(f"ffplay -nodisp -autoexit -loglevel quiet {filename}")
-
+    return res['id']
 
 def main():
     with SpotController(username=SPOT_USERNAME, password=SPOT_PASSWORD, robot_ip=ROBOT_IP) as spot:
-        res = capture_image()
+        capture_image()
+        res = fetch("/d")
         print(res)
-
-        say("hello world, hello world, hello world")
-
 
 
 if __name__ == '__main__':
